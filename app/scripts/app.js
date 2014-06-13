@@ -1,9 +1,10 @@
 /*jshint unused: vars */
-define(['angular', 'controllers/main', 'controllers/search']/*deps*/, function (angular, MainCtrl, SearchCtrl)/*invoke*/ {
+define(['angular', 'controllers/main', 'controllers/search', 'services/day']/*deps*/, function (angular, MainCtrl, SearchCtrl, DayFactory)/*invoke*/ {
   'use strict';
 
   return angular.module('wdiitApp', ['wdiitApp.controllers.MainCtrl',
 'wdiitApp.controllers.SearchCtrl',
+'wdiitApp.services.Day',
 /*angJSDeps*/
   'ngCookies',
   'ngResource',
