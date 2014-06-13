@@ -1,8 +1,9 @@
 /*jshint unused: vars */
-define(['angular', 'controllers/main']/*deps*/, function (angular, MainCtrl)/*invoke*/ {
+define(['angular', 'controllers/main', 'controllers/search']/*deps*/, function (angular, MainCtrl, SearchCtrl)/*invoke*/ {
   'use strict';
 
   return angular.module('wdiitApp', ['wdiitApp.controllers.MainCtrl',
+'wdiitApp.controllers.SearchCtrl',
 /*angJSDeps*/
   'ngCookies',
   'ngResource',
@@ -14,6 +15,10 @@ define(['angular', 'controllers/main']/*deps*/, function (angular, MainCtrl)/*in
         .when('/', {
           templateUrl: 'views/main.html',
           controller: 'MainCtrl'
+        })
+        .when('/search', {
+          templateUrl: 'views/search.html',
+          controller: 'SearchCtrl'
         })
         .otherwise({
           redirectTo: '/'
