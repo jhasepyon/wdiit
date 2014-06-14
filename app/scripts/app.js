@@ -1,5 +1,5 @@
 /*jshint unused: vars */
-define(['angular', 'controllers/main', 'controllers/search', 'services/day', 'controllers/today', 'services/today', 'controllers/calendar', 'controllers/list']/*deps*/, function (angular, MainCtrl, SearchCtrl, DayFactory, TodayCtrl, TodayFactory, CalendarCtrl, ListCtrl)/*invoke*/ {
+define(['angular', 'controllers/main', 'controllers/search', 'services/day', 'controllers/today', 'services/today', 'controllers/calendar', 'controllers/list', 'directives/navigation', 'controllers/navigation']/*deps*/, function (angular, MainCtrl, SearchCtrl, DayFactory, TodayCtrl, TodayFactory, CalendarCtrl, ListCtrl, NavigationDirective, NavigationCtrl)/*invoke*/ {
   'use strict';
 
   return angular.module('wdiitApp', ['wdiitApp.controllers.MainCtrl',
@@ -9,6 +9,8 @@ define(['angular', 'controllers/main', 'controllers/search', 'services/day', 'co
 'wdiitApp.services.Today',
 'wdiitApp.controllers.CalendarCtrl',
 'wdiitApp.controllers.ListCtrl',
+'wdiitApp.directives.Navigation',
+'wdiitApp.controllers.NavigationCtrl',
 /*angJSDeps*/
   'ngCookies',
   'ngResource',
