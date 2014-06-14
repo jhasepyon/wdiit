@@ -1,8 +1,8 @@
-define(['angular'], function(angular) {
+define(['angular', 'angularLocalStorage'], function(angular) {
   'use strict';
 
-  angular.module('wdiitApp.services.Day', [])
-    .factory('Day', function() {
+  angular.module('wdiitApp.services.Day', ['angularLocalStorage'])
+    .factory('Day', function(storage) {
       var day = {};
 
       day.get = function() {
@@ -50,6 +50,10 @@ define(['angular'], function(angular) {
           });
           day.setDate(date + 1);
         }
+
+        days = days.slice(0, 7);
+
+        storage.set(days[0].id, days[0].label);
         return days;
       };
 
