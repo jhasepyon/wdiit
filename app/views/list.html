@@ -1,0 +1,28 @@
+<navigation></navigation>
+
+<div class="row">
+    <div ng-controller="TodayCtrl">
+        <h2>{{title}}</h2>
+
+        <h3>出来事</h3>
+        <ul>
+            <li ng-repeat="dekigoto in dekigotos">
+                {{dekigoto}}
+            </li>
+        </ul>
+        <h3>誕生日</h3>
+        <ul>
+            <li ng-repeat="tanjoubi in tanjoubis">
+                {{tanjoubi}}
+            </li>
+        </ul>
+
+        <h3>記念日</h3>
+        <ul>
+            <li ng-repeat="kinenbi in kinenbis">
+                <span>{{kinenbi.title}}</span>
+                <span>{{kinenbi.description}}</span>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+<div ng-controller="NavigationCtrl" class="header">
+    <ul class="nav nav-pills pull-right">
+        <li ng-repeat="menu in menus" ng-class="{'active': {{isActive(menu.url)}}}">
+            <a ng-href="{{menu.url}}">{{menu.title}}</a>
+        </li>
+        <!--<li><a ng-href="#">Home</a></li>-->
+        <!--<li><a ng-href="#/list">List</a></li>-->
+        <!--<li><a ng-href="#/calendar">Calendar</a></li>-->
+        <!--<li><a ng-href="#/search">Search</a></li>-->
+    </ul>
+    <h3 class="text-muted">wdiit</h3>
+</div>
