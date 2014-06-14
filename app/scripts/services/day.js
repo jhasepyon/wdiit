@@ -34,7 +34,23 @@ define(['angular'], function(angular) {
       };
 
       day.query = function() {
+        var year = new Date().getFullYear();
+        var start = new Date(year, 0, 1);
+        var end = new Date(year + 1, 0, 1);
+        var endStr = end.toString();
+        var day = start;
 
+        var days = [];
+        while (day.toString() !== endStr) {
+          var month = day.getMonth() + 1;
+          var date = day.getDate();
+          days.push({
+            id: month + '/' + date,
+            label: month + '月' + date + '日'
+          });
+          day.setDate(date + 1);
+        }
+        return days;
       };
 
       return day;
