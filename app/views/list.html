@@ -1,7 +1,7 @@
 <navigation></navigation>
 
 <div class="row">
-    <div ng-controller="TodayCtrl">
+    <div ng-controller="TodayCtrl" class="col-xs-9">
         <h2>{{title}}</h2>
 
         <h3>出来事</h3>
@@ -23,6 +23,12 @@
                 <span>{{kinenbi.title}}</span>
                 <span>{{kinenbi.description}}</span>
             </li>
+        </ul>
+    </div>
+
+    <div ng-controller="ListMenuCtrl" class="col-xs-3">
+        <ul>
+            <li ng-repeat="day in days">{{day}}</li>
         </ul>
     </div>
 </div>
