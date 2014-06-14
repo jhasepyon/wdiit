@@ -1,28 +1,10 @@
 <navigation></navigation>
 
-<div class="row">
-    <div ng-controller="TodayCtrl">
-        <h2>{{title}}</h2>
+<div class="jumbotron">
+    <h1>今日は何の日？</h1>
 
-        <h3>出来事</h3>
-        <ul>
-            <li ng-repeat="dekigoto in dekigotos">
-                {{dekigoto}}
-            </li>
-        </ul>
-        <h3>誕生日</h3>
-        <ul>
-            <li ng-repeat="tanjoubi in tanjoubis">
-                {{tanjoubi}}
-            </li>
-        </ul>
-
-        <h3>記念日</h3>
-        <ul>
-            <li ng-repeat="kinenbi in kinenbis">
-                <span>{{kinenbi.title}}</span>
-                <span>{{kinenbi.description}}</span>
-            </li>
-        </ul>
-    </div>
+    <p class="lead">
+        今日の出来事や誕生日、記念日が分かるよ
+    </p>
 </div>
+
