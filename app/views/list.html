@@ -27,8 +27,13 @@
     </div>
 
     <div ng-controller="ListMenuCtrl" class="col-xs-3">
-        <ul>
-            <li ng-repeat="day in days" ng-click="changeToday(day.id)">{{day.title}}</li>
-        </ul>
+        <div class="list-group">
+            <a href="#/list"
+               ng-repeat="day in days"
+               ng-click="changeToday(day.id)"
+               ng-class="{'list-group-item': true, 'active': isActive(day.id)}">
+                {{day.title}}
+            </a>
+        </div>
     </div>
 </div>
