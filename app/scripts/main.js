@@ -9,7 +9,8 @@ require.config({
     'angular-resource': '../bower_components/angular-resource/angular-resource',
     'angular-mocks': '../bower_components/angular-mocks/angular-mocks',
     'angular-cookies': '../bower_components/angular-cookies/angular-cookies',
-    angular: '../bower_components/angular/angular'
+    angular: '../bower_components/angular/angular',
+    'angularLocalStorage': '../bower_components/angularLocalStorage/src/angularLocalStorage'
   },
   shim: {
     angular: {
@@ -32,7 +33,10 @@ require.config({
         'angular'
       ],
       exports: 'angular.mock'
-    }
+    },
+    'angularLocalStorage': [
+      'angular'
+    ]
   },
   priority: [
     'angular'
