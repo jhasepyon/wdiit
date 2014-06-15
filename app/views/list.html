@@ -2,24 +2,24 @@
 
 <div class="row">
     <div ng-controller="TodayCtrl" class="col-xs-9">
-        <h2>{{title}}</h2>
+        <h2>{{today.day.title}}</h2>
 
         <h3>出来事</h3>
         <ul>
-            <li ng-repeat="dekigoto in dekigotos">
+            <li ng-repeat="dekigoto in today.day.dekigotos">
                 {{dekigoto}}
             </li>
         </ul>
         <h3>誕生日</h3>
         <ul>
-            <li ng-repeat="tanjoubi in tanjoubis">
+            <li ng-repeat="tanjoubi in today.day.tanjoubis">
                 {{tanjoubi}}
             </li>
         </ul>
 
         <h3>記念日</h3>
         <ul>
-            <li ng-repeat="kinenbi in kinenbis">
+            <li ng-repeat="kinenbi in today.day.kinenbis">
                 <span>{{kinenbi.title}}</span>
                 <span>{{kinenbi.description}}</span>
             </li>
@@ -28,7 +28,7 @@
 
     <div ng-controller="ListMenuCtrl" class="col-xs-3">
         <ul>
-            <li ng-repeat="day in days">{{day.label}}</li>
+            <li ng-repeat="day in days" ng-click="changeToday(day.id)">{{day.title}}</li>
         </ul>
     </div>
 </div>

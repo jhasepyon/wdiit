@@ -3,10 +3,10 @@ define(['angular', 'angularLocalStorage'], function(angular) {
 
   angular.module('wdiitApp.services.Day', ['angularLocalStorage'])
     .factory('Day', function(storage) {
-      var day = {};
+      var dayFactory = {};
 
-      day.get = function() {
-        return {
+      dayFactory.get = function(id) {
+        var tmp = {
           title: '6月19日',
           dekigotos: [
             '1333年（元弘3年/正慶2年5月7日） - 倒幕に転じた足利高氏らの攻撃により六波羅探題が陥落。',
@@ -31,9 +31,57 @@ define(['angular', 'angularLocalStorage'], function(angular) {
             }
           ]
         };
+        tmp.id = id;
+        switch (id) {
+          case '1/1':
+            tmp.title = '1月1日';
+            break;
+          case '1/2':
+            tmp.title = '1月2日';
+            break;
+          case '1/3':
+            tmp.title = '1月3日';
+            break;
+          case '1/4':
+            tmp.title = '1月4日';
+            break;
+          case '1/5':
+            tmp.title = '1月5日';
+            break;
+          case '1/6':
+            tmp.title = '1月6日';
+            break;
+          case '1/7':
+            tmp.title = '1月7日';
+            break;
+        }
+        return tmp;
       };
 
-      day.query = function() {
+      dayFactory.query = function() {
+        storage.clearAll();
+
+        var days = this.getAllDays();
+
+        days = days.slice(0, 7);
+        var newDays = [];
+        for (var i = 0, l = days.length; i < l; i++) {
+          var current = days[i];
+          var month = current.month;
+          var date = current.date;
+          var id = month + '/' + date;
+
+          var newDay = dayFactory.get(id);
+          newDay.month = month;
+          newDay.date = date;
+          newDays.push(newDay);
+        }
+
+//        storage.set(days[0].id, days[0].label);
+        return newDays;
+      };
+
+      dayFactory.getAllDays = function() {
         var year = new Date().getFullYear();
         var start = new Date(year, 0, 1);
         var end = new Date(year + 1, 0, 1);
@@ -45,18 +93,14 @@ define(['angular', 'angularLocalStorage'], function(angular) {
           var month = day.getMonth() + 1;
           var date = day.getDate();
           days.push({
-            id: month + '/' + date,
-            label: month + '月' + date + '日'
+            month: month,
+            date: date
           });
           day.setDate(date + 1);
         }
-
-        days = days.slice(0, 7);
-
-        storage.set(days[0].id, days[0].label);
         return days;
       };
 
-      return day;
+      return dayFactory;
     });
 });
