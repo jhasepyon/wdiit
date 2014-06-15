@@ -37,6 +37,9 @@ require.config({
     },
     'angularLocalStorage': [
       'angular'
+    ],
+    'xml2json': [
+      'jquery'
     ]
   },
   priority: [
