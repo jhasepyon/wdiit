@@ -66,7 +66,7 @@ define(['angular', 'angularLocalStorage'], function(angular) {
       };
 
       dayFactory.query = function() {
-        storage.clearAll();
+//        storage.clearAll();
 
         var days = this.getAllDays();
 

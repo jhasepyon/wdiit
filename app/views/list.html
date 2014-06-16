@@ -2,37 +2,37 @@
 
 <div class="row">
     <div ng-controller="TodayCtrl" class="col-xs-9">
-        <h2>{{today.day.title}}</h2>
+        <h2>{{today.topic.title}}</h2>
 
         <h3>出来事</h3>
         <ul>
-            <li ng-repeat="dekigoto in today.day.dekigotos">
-                {{dekigoto}}
+            <li ng-repeat="event in today.topic.events">
+                {{event}}
             </li>
         </ul>
         <h3>誕生日</h3>
         <ul>
-            <li ng-repeat="tanjoubi in today.day.tanjoubis">
-                {{tanjoubi}}
+            <li ng-repeat="person in today.topic.persons">
+                {{person}}
             </li>
         </ul>
 
         <h3>記念日</h3>
         <ul>
-            <li ng-repeat="kinenbi in today.day.kinenbis">
-                <span>{{kinenbi.title}}</span>
-                <span>{{kinenbi.description}}</span>
+            <li ng-repeat="anniversary in today.topic.anniversaries">
+                <span>{{anniversary.title}}</span><br />
+                <span>{{anniversary.description}}</span>
             </li>
         </ul>
     </div>
 
     <div ng-controller="ListMenuCtrl" class="col-xs-3">
         <div class="list-group">
-            <a href="#/list"
-               ng-repeat="day in days"
-               ng-click="changeToday(day.id)"
-               ng-class="{'list-group-item': true, 'active': isActive(day.id)}">
-                {{day.title}}
+            <a href="#/list/1/1"
+               ng-repeat="topic in topics"
+               ng-click="changeToday($index)"
+               ng-class="{'list-group-item': true, 'active': isActive($index)}">
+                {{topic.title}}
             </a>
         </div>
     </div>

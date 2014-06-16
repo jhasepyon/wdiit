@@ -2,19 +2,18 @@ define(['angular'], function(angular) {
   'use strict';
 
   angular.module('wdiitApp.controllers.ListMenuCtrl', [])
-    .controller('ListMenuCtrl', function($scope, Day, Today) {
-      var days = Day.query();
-      $scope.days = days;
+    .controller('ListMenuCtrl', ['$scope', 'Day', 'Today',
+      function($scope, Day, Today) {
+        var active;
+        $scope.topics = [$scope.$parent.topics];
 
-      $scope.changeToday = function(id) {
-        Today.day = Day.get(id);
-      };
+        $scope.changeToday = function(index) {
+          active = index;
+          Today.topic = $scope.topics[index];
+        };
 
-      $scope.isActive = function(id) {
-        if (Today.day) {
-          return Today.day.id === id;
-        }
-        return false;
-      };
-    });
+        $scope.isActive = function(index) {
+          return active === index;
+        };
+      }]);
 });
