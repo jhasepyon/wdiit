@@ -10,8 +10,8 @@ require.config({
     'angular-mocks': '../bower_components/angular-mocks/angular-mocks',
     'angular-cookies': '../bower_components/angular-cookies/angular-cookies',
     angular: '../bower_components/angular/angular',
-    'angularLocalStorage': '../bower_components/angularLocalStorage/src/angularLocalStorage',
-    'xml2json': '../bower_components/jquery-xml2json/src/xml2json'
+    angularLocalStorage: '../bower_components/angularLocalStorage/src/angularLocalStorage',
+    'jquery-xml2json': '../bower_components/jquery-xml2json/src/xml2json'
   },
   shim: {
     angular: {
@@ -35,11 +35,8 @@ require.config({
       ],
       exports: 'angular.mock'
     },
-    'angularLocalStorage': [
+    angularLocalStorage: [
       'angular'
-    ],
-    'xml2json': [
-      'jquery'
     ]
   },
   priority: [

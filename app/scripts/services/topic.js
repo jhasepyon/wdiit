@@ -1,4 +1,4 @@
-define(['angular', 'angularLocalStorage', 'jquery', 'xml2json'], function(angular) {
+define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function(angular) {
   'use strict';
 
   var services = angular.module('wdiitApp.services.Topic', ['angularLocalStorage']);
