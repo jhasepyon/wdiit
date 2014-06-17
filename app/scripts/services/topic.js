@@ -84,7 +84,8 @@ define(['angular', 'angularLocalStorage', 'jquery', 'xml2json'], function(angula
         var params = $route.current.params;
         var month = params.month;
         var day = params.day;
-        Topic.get({day: month + '/' + day}, function(topic) {
+        var date = month && day ? month + '/' + day : '1/1';
+        Topic.get({day: date}, function(topic) {
           delay.resolve(topic);
         }, function() {
           delay.reject('トピックの取得に失敗しました');

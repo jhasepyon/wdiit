@@ -4,7 +4,7 @@ define(['angular'], function(angular) {
   angular.module('wdiitApp.controllers.ListMenuCtrl', [])
     .controller('ListMenuCtrl', ['$scope', 'Day', 'Today',
       function($scope, Day, Today) {
-        var active;
+        var active = 0;
         $scope.topics = [$scope.$parent.topics];
 
         $scope.changeToday = function(index) {

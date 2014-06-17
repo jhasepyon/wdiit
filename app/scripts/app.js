@@ -27,7 +27,12 @@ define(['angular', 'controllers/main', 'controllers/search', 'services/day', 'co
         })
         .when('/list', {
           templateUrl: 'views/list.html',
-          controller: 'ListCtrl'
+          controller: 'ListCtrl',
+          resolve: {
+            topics: function(TopicLoader) {
+              return TopicLoader();
+            }
+          }
         })
         .when('/list/:month/:day', {
           templateUrl: 'views/list.html',
