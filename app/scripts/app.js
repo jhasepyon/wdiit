@@ -29,8 +29,8 @@ define(['angular', 'controllers/main', 'controllers/search', 'services/day', 'co
           templateUrl: 'views/list.html',
           controller: 'ListCtrl',
           resolve: {
-            topics: function(TopicLoader) {
-              return TopicLoader();
+            topics: function(MultiTopicLoader) {
+              return MultiTopicLoader();
             }
           }
         })
@@ -38,8 +38,8 @@ define(['angular', 'controllers/main', 'controllers/search', 'services/day', 'co
           templateUrl: 'views/list.html',
           controller: 'ListCtrl',
           resolve: {
-            topics: function(TopicLoader) {
-              return TopicLoader();
+            topics: function(MultiTopicLoader) {
+              return MultiTopicLoader();
             }
           }
         })

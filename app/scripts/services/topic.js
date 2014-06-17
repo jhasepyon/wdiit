@@ -3,7 +3,7 @@ define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function
 
   var services = angular.module('wdiitApp.services.Topic', ['angularLocalStorage']);
 
-  services.factory('Topic', function($http, storage) {
+  services.factory('Topic', ['$http', '$q', 'storage', function($http, $q, storage) {
     var baseUrl = 'wikipedia_daytopic/api.cgi/';
 
     function getStorageId_(day) {
@@ -13,7 +13,7 @@ define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function
     function load_(day, success, error) {
       $http.get(baseUrl + day)
         .success(function(data) {
-          var json = jQuery.xml2json(data)['feed'];
+          var json = jQuery.xml2json(data).feed;
           var topic = transformJson_(json);
           storage.set(getStorageId_(day), topic);
           success(topic);
@@ -24,31 +24,13 @@ define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function
     }
 
     function transformJson_(json) {
-      var topic = {
-        title: json['title'],
-        wikipedia: json['wikipedia'],
-        events: [], // 出来事
-        persons: [], // 誕生日
-        anniversaries: [] // 記念日
+      return {
+        title: json.title,
+        wikipedia: json.wikipedia,
+        events: json.dekigoto.item,
+        persons: json.tanjyoubi.item,
+        anniversaries: json['kinenbi_detail'].item
       };
-      var i, l;
-
-      var dekigoto = json['dekigoto'];
-      for (i = 0, l = dekigoto['item'].length; i < l; i++) {
-        topic.events.push(dekigoto['item'][i]);
-      }
-
-      var tanjyoubi = json['tanjyoubi'];
-      for (i = 0, l = tanjyoubi['item'].length; i < l; i++) {
-        topic.persons.push(tanjyoubi['item'][i]);
-      }
-
-      var kinenbi = json['kinenbi'];
-      var kinenbi_detail = json['kinenbi_detail'];
-      for (i = 0, l = kinenbi['item'].length; i < l; i++) {
-        topic.anniversaries.push(kinenbi_detail['item'][i]);
-      }
-      return topic;
     }
 
     return {
@@ -60,21 +42,44 @@ define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function
         } else {
           load_(day, success, error);
         }
+      },
+
+      getByDates: function(option, success, error) {
+        var promises = [];
+        for (var i = 1; i <= 7; i++) {
+          promises.push($http.get(baseUrl + '1/' + i));
+        }
+
+        var q = $q.all(promises)
+          .then(function(result) {
+            var topics = [];
+            angular.forEach(result, function(resp) {
+              if (jQuery.xml2json) {
+                var json = jQuery.xml2json(resp.data).feed;
+                var topic = transformJson_(json);
+                topics.push(topic);
+              } else {
+                alert('xml2jsonが読み込まれていません');
+              }
+            });
+            return topics;
+          }).then(success, error);
+        return q;
       }
     };
-  });
+  }]);
 
   services.factory('MultiTopicLoader', ['Topic', '$q',
     function(Topic, $q) {
       return function() {
         var delay = $q.defer();
-        Topic.query(function(topics) {
+        Topic.getByDates({}, function(topics) {
           delay.resolve(topics);
         }, function() {
           delay.reject('トピックの取得に失敗しました');
         });
         return delay.promise;
-      }
+      };
     }]);
 
   services.factory('TopicLoader', ['Topic', '$route', '$q',
@@ -91,6 +96,6 @@ define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function
           delay.reject('トピックの取得に失敗しました');
         });
         return delay.promise;
-      }
+      };
     }]);
 });

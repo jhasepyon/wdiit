@@ -5,7 +5,7 @@ define(['angular'], function(angular) {
     .controller('ListMenuCtrl', ['$scope', 'Day', 'Today',
       function($scope, Day, Today) {
         var active = 0;
-        $scope.topics = [$scope.$parent.topics];
+        $scope.topics = $scope.$parent.topics;
 
         $scope.changeToday = function(index) {
           active = index;
