@@ -33,6 +33,24 @@ define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function
       };
     }
 
+    function loadDate_(date) {
+      var delay = $q.defer();
+      $http.get(baseUrl + date)
+        .success(function(resp) {
+          if (jQuery.xml2json) {
+            var json = jQuery.xml2json(resp).feed;
+            var topic = transformJson_(json);
+            delay.resolve(topic);
+          } else {
+            delay.reject('xml2jsonが読み込まれていません');
+          }
+        })
+        .error(function() {
+          delay.reject('トピックの取得に失敗しました。');
+        });
+      return delay.promise;
+    }
+
     return {
       get: function(option, success, error) {
         var day = option.day;
@@ -47,24 +65,10 @@ define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function
       getByDates: function(option, success, error) {
         var promises = [];
         for (var i = 1; i <= 7; i++) {
-          promises.push($http.get(baseUrl + '1/' + i));
+          promises.push(loadDate_('1/' + i));
         }
 
-        var q = $q.all(promises)
-          .then(function(result) {
-            var topics = [];
-            angular.forEach(result, function(resp) {
-              if (jQuery.xml2json) {
-                var json = jQuery.xml2json(resp.data).feed;
-                var topic = transformJson_(json);
-                topics.push(topic);
-              } else {
-                alert('xml2jsonが読み込まれていません');
-              }
-            });
-            return topics;
-          }).then(success, error);
-        return q;
+        return $q.all(promises).then(success, error);
       }
     };
   }]);
