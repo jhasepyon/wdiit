@@ -2,7 +2,7 @@ define(['angular', 'angularLocalStorage'], function(angular) {
   'use strict';
 
   angular.module('wdiitApp.services.Day', ['angularLocalStorage'])
-    .factory('Day', function(storage) {
+    .factory('Day', function(Topic, storage) {
       var dayFactory = {};
 
       dayFactory.get = function(id) {
@@ -34,6 +34,13 @@ define(['angular', 'angularLocalStorage'], function(angular) {
         tmp.id = id;
         switch (id) {
           case '1/1':
+            Topic.get({day: '1/1'},
+            function() {
+              console.log('success');
+            },
+            function() {
+              console.log('error');
+            });
             tmp.title = '1月1日';
             break;
           case '1/2':
@@ -59,7 +66,7 @@ define(['angular', 'angularLocalStorage'], function(angular) {
       };
 
       dayFactory.query = function() {
-        storage.clearAll();
+//        storage.clearAll();
 
         var days = this.getAllDays();
 
