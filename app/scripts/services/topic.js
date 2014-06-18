@@ -1,24 +1,10 @@
-define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function(angular) {
+define(['angular', 'jquery', 'jquery-xml2json'], function(angular) {
   'use strict';
 
-  var services = angular.module('wdiitApp.services.Topic', ['angularLocalStorage']);
+  var services = angular.module('wdiitApp.services.Topic', []);
 
-  services.factory('Topic', ['$http', '$q', 'storage', function($http, $q, storage) {
+  services.factory('Topic', ['$http', '$q', 'StorageService', function($http, $q, StorageService) {
     var baseUrl = 'wikipedia_daytopic/api.cgi/';
-
-    function getStorageId_(day) {
-      return 'topic:' + day;
-    }
-
-    function transformJson_(json) {
-      return {
-        title: json.title,
-        wikipedia: json.wikipedia,
-        events: json.dekigoto.item,
-        persons: json.tanjyoubi.item,
-        anniversaries: json['kinenbi_detail'].item
-      };
-    }
 
     /**
      * 指定された日付のトピックを取得する。
@@ -30,34 +16,33 @@ define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function
     function loadTopic_(date) {
       var delay = $q.defer();
 
-      var topic = getFromStorage_(date);
+      var topic = StorageService.getTopic(date);
       if (topic) {
         delay.resolve(topic);
       } else {
         $http.get(baseUrl + date)
           .success(function(resp) {
             topic = transformResponse_(resp);
-            save_(date, topic);
+            StorageService.saveTopic(date, topic);
             delay.resolve(topic);
           })
           .error(function() {
             delay.reject('トピックの取得に失敗しました。');
           });
       }
+
       return delay.promise;
     }
 
     function transformResponse_(resp) {
       var json = jQuery.xml2json(resp).feed;
-      return transformJson_(json);
-    }
-
-    function getFromStorage_(date) {
-      return storage.get(getStorageId_(date));
-    }
-
-    function save_(date, topic) {
-      return storage.set(getStorageId_(date), topic);
+      return {
+        title: json.title,
+        wikipedia: json.wikipedia,
+        events: json.dekigoto.item,
+        persons: json.tanjyoubi.item,
+        anniversaries: json['kinenbi_detail'].item
+      };
     }
 
     return {
