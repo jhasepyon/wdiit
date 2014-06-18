@@ -10,19 +10,6 @@ define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function
       return 'topic:' + day;
     }
 
-    function load_(day, success, error) {
-      $http.get(baseUrl + day)
-        .success(function(data) {
-          var json = jQuery.xml2json(data).feed;
-          var topic = transformJson_(json);
-          storage.set(getStorageId_(day), topic);
-          success(topic);
-        })
-        .error(function() {
-          error();
-        });
-    }
-
     function transformJson_(json) {
       return {
         title: json.title,
@@ -75,13 +62,7 @@ define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function
 
     return {
       get: function(option, success, error) {
-        var day = option.day;
-        var topic = storage.get(getStorageId_(day));
-        if (topic) {
-          success(topic);
-        } else {
-          load_(day, success, error);
-        }
+        return loadTopic_(option.date).then(success, error);
       },
 
       getByDates: function(option, success, error) {
@@ -115,7 +96,7 @@ define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function
         var month = params.month;
         var day = params.day;
         var date = month && day ? month + '/' + day : '1/1';
-        Topic.get({day: date}, function(topic) {
+        Topic.get({date: date}, function(topic) {
           delay.resolve(topic);
         }, function() {
           delay.reject('トピックの取得に失敗しました');
