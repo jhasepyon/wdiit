@@ -33,22 +33,44 @@ define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function
       };
     }
 
-    function loadDate_(date) {
+    /**
+     * 指定された日付のトピックを取得する。
+     * ローカルストレージを優先的に検索する。
+     * @param {string} date
+     * @return {!Object} promise
+     * @private
+     */
+    function loadTopic_(date) {
       var delay = $q.defer();
-      $http.get(baseUrl + date)
-        .success(function(resp) {
-          if (jQuery.xml2json) {
-            var json = jQuery.xml2json(resp).feed;
-            var topic = transformJson_(json);
+
+      var topic = getFromStorage_(date);
+      if (topic) {
+        delay.resolve(topic);
+      } else {
+        $http.get(baseUrl + date)
+          .success(function(resp) {
+            topic = transformResponse_(resp);
+            save_(date, topic);
             delay.resolve(topic);
-          } else {
-            delay.reject('xml2jsonが読み込まれていません');
-          }
-        })
-        .error(function() {
-          delay.reject('トピックの取得に失敗しました。');
-        });
+          })
+          .error(function() {
+            delay.reject('トピックの取得に失敗しました。');
+          });
+      }
       return delay.promise;
+    }
+
+    function transformResponse_(resp) {
+      var json = jQuery.xml2json(resp).feed;
+      return transformJson_(json);
+    }
+
+    function getFromStorage_(date) {
+      return storage.get(getStorageId_(date));
+    }
+
+    function save_(date, topic) {
+      return storage.set(getStorageId_(date), topic);
     }
 
     return {
@@ -65,9 +87,8 @@ define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function
       getByDates: function(option, success, error) {
         var promises = [];
         for (var i = 1; i <= 7; i++) {
-          promises.push(loadDate_('1/' + i));
+          promises.push(loadTopic_('1/' + i));
         }
-
         return $q.all(promises).then(success, error);
       }
     };
