@@ -1,8 +1,8 @@
-define(['angular', 'angularLocalStorage'], function(angular) {
+define(['angular'], function(angular) {
   'use strict';
 
-  angular.module('wdiitApp.services.Day', ['angularLocalStorage'])
-    .factory('Day', function(Topic, storage) {
+  angular.module('wdiitApp.services.Day', [])
+    .factory('Day', function(Topic) {
       var dayFactory = {};
 
       dayFactory.get = function(id) {

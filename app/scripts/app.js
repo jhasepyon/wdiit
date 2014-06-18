@@ -30,8 +30,8 @@ define(['angular', 'controllers/main', 'controllers/search', 'services/day', 'co
           templateUrl: 'views/list.html',
           controller: 'ListCtrl',
           resolve: {
-            topics: function(MultiTopicLoader) {
-              return MultiTopicLoader();
+            topics: function(multiTopicLoader) {
+              return multiTopicLoader();
             }
           }
         })
@@ -39,8 +39,8 @@ define(['angular', 'controllers/main', 'controllers/search', 'services/day', 'co
           templateUrl: 'views/list.html',
           controller: 'ListCtrl',
           resolve: {
-            topics: function(MultiTopicLoader) {
-              return MultiTopicLoader();
+            topics: function(multiTopicLoader) {
+              return multiTopicLoader();
             }
           }
         })

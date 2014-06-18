@@ -1,4 +1,4 @@
-define(['angular', 'jquery', 'jquery-xml2json'], function(angular) {
+define(['angular', 'jquery', 'jquery-xml2json'], function(angular, jQuery) {
   'use strict';
 
   var services = angular.module('wdiitApp.services.Topic', []);
@@ -9,13 +9,14 @@ define(['angular', 'jquery', 'jquery-xml2json'], function(angular) {
     /**
      * 指定された日付のトピックを取得する。
      * ローカルストレージを優先的に検索する。
-     * @param {string} date
+     * @param {!Object} option
      * @return {!Object} promise
      * @private
      */
-    function loadTopic_(date) {
-      var delay = $q.defer();
+    function get_(option) {
+      var date = option.date;
 
+      var delay = $q.defer();
       var topic = StorageService.getTopic(date);
       if (topic) {
         delay.resolve(topic);
@@ -47,33 +48,40 @@ define(['angular', 'jquery', 'jquery-xml2json'], function(angular) {
 
     return {
       get: function(option, success, error) {
-        return loadTopic_(option.date).then(success, error);
+        return get_(option).then(success, error);
       },
 
       getByDates: function(option, success, error) {
         var promises = [];
-        for (var i = 1; i <= 7; i++) {
-          promises.push(loadTopic_('1/' + i));
-        }
+        angular.forEach(option.dates, function(date) {
+          promises.push(get_({date: date}));
+        });
         return $q.all(promises).then(success, error);
       }
     };
   }]);
 
-  services.factory('MultiTopicLoader', ['Topic', '$q',
+  services.factory('multiTopicLoader', ['Topic', '$q',
     function(Topic, $q) {
       return function() {
+        var dates = [];
+        for (var i = 1; i <= 7; i++) {
+          dates.push('1/' + i);
+        }
+
         var delay = $q.defer();
-        Topic.getByDates({}, function(topics) {
-          delay.resolve(topics);
-        }, function() {
-          delay.reject('トピックの取得に失敗しました');
-        });
+        Topic.getByDates({dates: dates},
+          function(topics) {
+            delay.resolve(topics);
+          },
+          function() {
+            delay.reject('トピックの取得に失敗しました');
+          });
         return delay.promise;
       };
     }]);
 
-  services.factory('TopicLoader', ['Topic', '$route', '$q',
+  services.factory('topicLoader', ['Topic', '$route', '$q',
     function(Topic, $route, $q) {
       return function() {
         var delay = $q.defer();
