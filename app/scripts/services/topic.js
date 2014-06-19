@@ -1,29 +1,42 @@
-define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function(angular) {
+define(['angular', 'jquery', 'jquery-xml2json'], function(angular, jQuery) {
   'use strict';
 
-  var services = angular.module('wdiitApp.services.Topic', ['angularLocalStorage']);
+  var services = angular.module('wdiitApp.services.Topic', []);
 
-  services.factory('Topic', ['$http', '$q', 'storage', function($http, $q, storage) {
+  services.factory('Topic', ['$http', '$q', 'StorageService', function($http, $q, StorageService) {
     var baseUrl = 'wikipedia_daytopic/api.cgi/';
 
-    function getStorageId_(day) {
-      return 'topic:' + day;
+    /**
+     * 指定された日付のトピックを取得する。
+     * ローカルストレージを優先的に検索する。
+     * @param {!Object} option
+     * @return {!Object} promise
+     * @private
+     */
+    function get_(option) {
+      var date = option.date;
+
+      var delay = $q.defer();
+      var topic = StorageService.getTopic(date);
+      if (topic) {
+        delay.resolve(topic);
+      } else {
+        $http.get(baseUrl + date)
+          .success(function(resp) {
+            topic = transformResponse_(resp);
+            StorageService.saveTopic(date, topic);
+            delay.resolve(topic);
+          })
+          .error(function() {
+            delay.reject('トピックの取得に失敗しました。');
+          });
+      }
+
+      return delay.promise;
     }
 
-    function load_(day, success, error) {
-      $http.get(baseUrl + day)
-        .success(function(data) {
-          var json = jQuery.xml2json(data).feed;
-          var topic = transformJson_(json);
-          storage.set(getStorageId_(day), topic);
-          success(topic);
-        })
-        .error(function() {
-          error();
-        });
-    }
-
-    function transformJson_(json) {
+    function transformResponse_(resp) {
+      var json = jQuery.xml2json(resp).feed;
       return {
         title: json.title,
         wikipedia: json.wikipedia,
@@ -33,60 +46,42 @@ define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function
       };
     }
 
-    function loadDate_(date) {
-      var delay = $q.defer();
-      $http.get(baseUrl + date)
-        .success(function(resp) {
-          if (jQuery.xml2json) {
-            var json = jQuery.xml2json(resp).feed;
-            var topic = transformJson_(json);
-            delay.resolve(topic);
-          } else {
-            delay.reject('xml2jsonが読み込まれていません');
-          }
-        })
-        .error(function() {
-          delay.reject('トピックの取得に失敗しました。');
-        });
-      return delay.promise;
-    }
-
     return {
       get: function(option, success, error) {
-        var day = option.day;
-        var topic = storage.get(getStorageId_(day));
-        if (topic) {
-          success(topic);
-        } else {
-          load_(day, success, error);
-        }
+        return get_(option).then(success, error);
       },
 
       getByDates: function(option, success, error) {
         var promises = [];
-        for (var i = 1; i <= 7; i++) {
-          promises.push(loadDate_('1/' + i));
-        }
-
+        angular.forEach(option.dates, function(date) {
+          promises.push(get_({date: date}));
+        });
         return $q.all(promises).then(success, error);
       }
     };
   }]);
 
-  services.factory('MultiTopicLoader', ['Topic', '$q',
+  services.factory('multiTopicLoader', ['Topic', '$q',
     function(Topic, $q) {
       return function() {
+        var dates = [];
+        for (var i = 1; i <= 7; i++) {
+          dates.push('1/' + i);
+        }
+
         var delay = $q.defer();
-        Topic.getByDates({}, function(topics) {
-          delay.resolve(topics);
-        }, function() {
-          delay.reject('トピックの取得に失敗しました');
-        });
+        Topic.getByDates({dates: dates},
+          function(topics) {
+            delay.resolve(topics);
+          },
+          function() {
+            delay.reject('トピックの取得に失敗しました');
+          });
         return delay.promise;
       };
     }]);
 
-  services.factory('TopicLoader', ['Topic', '$route', '$q',
+  services.factory('topicLoader', ['Topic', '$route', '$q',
     function(Topic, $route, $q) {
       return function() {
         var delay = $q.defer();
@@ -94,7 +89,7 @@ define(['angular', 'angularLocalStorage', 'jquery', 'jquery-xml2json'], function
         var month = params.month;
         var day = params.day;
         var date = month && day ? month + '/' + day : '1/1';
-        Topic.get({day: date}, function(topic) {
+        Topic.get({date: date}, function(topic) {
           delay.resolve(topic);
         }, function() {
           delay.reject('トピックの取得に失敗しました');

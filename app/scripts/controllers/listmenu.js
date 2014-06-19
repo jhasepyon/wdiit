@@ -6,6 +6,7 @@ define(['angular'], function(angular) {
       function($scope, Day, Today) {
         var active = 0;
         $scope.topics = $scope.$parent.topics;
+        Today.topic = $scope.topics[active];
 
         $scope.changeToday = function(index) {
           active = index;
