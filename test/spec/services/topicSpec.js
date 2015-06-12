@@ -13,9 +13,5 @@ define(['angular', 'angular-mocks', 'app'], function(angular, mocks, app) {
       topic = _topic_;
     }));
 
-    it('should do something', function () {
-      expect(!!topic).toBe(true);
-    });
-
   });
 });

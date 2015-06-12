@@ -13,9 +13,5 @@ define(['angular', 'angular-mocks', 'app'], function(angular, mocks, app) {
       day = _day_;
     }));
 
-    it('should do something', function () {
-      expect(!!day).toBe(true);
-    });
-
   });
 });

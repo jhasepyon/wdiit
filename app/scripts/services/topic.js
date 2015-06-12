@@ -37,12 +37,13 @@ define(['angular', 'jquery', 'jquery-xml2json'], function(angular, jQuery) {
 
     function transformResponse_(resp) {
       var json = jQuery.xml2json(resp).feed;
+      var anniversaries = 'kinenbi_detail';
       return {
         title: json.title,
         wikipedia: json.wikipedia,
         events: json.dekigoto.item,
         persons: json.tanjyoubi.item,
-        anniversaries: json['kinenbi_detail'].item
+        anniversaries: json[anniversaries].item
       };
     }
 

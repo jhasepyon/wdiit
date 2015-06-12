@@ -6,20 +6,23 @@
 
         <h3>出来事</h3>
         <ul>
-            <li ng-repeat="event in today.topic.events">
+            <li ng-repeat="event in today.topic.events"
+                ng-show="show($index, today.topic.events.length, 3)">
                 {{event}}
             </li>
         </ul>
         <h3>誕生日</h3>
         <ul>
-            <li ng-repeat="person in today.topic.persons">
+            <li ng-repeat="person in today.topic.persons"
+                ng-show="show($index, today.topic.persons.length, 5)">
                 {{person}}
             </li>
         </ul>
 
         <h3>記念日</h3>
         <ul>
-            <li ng-repeat="anniversary in today.topic.anniversaries">
+            <li ng-repeat="anniversary in today.topic.anniversaries"
+                ng-show="show($index, today.topic.anniversaries.length, 3)">
                 <span>{{anniversary.title}}</span><br />
                 <span>{{anniversary.description}}</span>
             </li>
